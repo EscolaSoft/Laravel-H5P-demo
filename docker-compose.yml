@@ -1,0 +1,36 @@
+version: "3.5"
+networks:
+  l5:
+    name: l5
+    driver: bridge
+services:
+  nginx:
+    image: nginx:1.19
+    ports:
+      - "1111:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/conf/:/etc/nginx/conf.d/
+      - ./docker/www_logs/nginx:/var/log/nginx
+    links:
+      - app
+    networks:
+      - l5
+  app:
+    image: escolasoft1/laravel-prod-docker
+    command: bash -c "/etc/init.d/cron start && php-fpm -F"
+    volumes:
+      - ./:/var/www/html:cached
+      - ./docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
+    networks:
+      - l5
+  mysql:
+    networks:
+      - l5
+    image: mariadb:10.5
+    volumes:
+      - ./docker/mysql-data:/var/lib/mysql
+      - ./docker/conf/mysql:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: database

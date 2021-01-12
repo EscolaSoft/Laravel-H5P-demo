@@ -1,33 +1,22 @@
-fix-style:
-	- docker-compose exec app bash -c "./vendor/bin/php-cs-fixer fix ."
-
-test-phpunit:
-	- docker-compose exec app bash -c "./vendor/bin/phpunit"
-
-test-behat:
-	- docker-compose exec app bash -c "./vendor/bin/behat --colors"
+docker-up:
+	- docker-compose up -d;
 
 bash:
 	- docker-compose exec app bash
 
-ide-helper:
-	- docker-compose exec app bash -c "php artisan ide-helper:generate && mv _ide_helper.php .phan/stubs/_ide_helper.php"
-
-migrate-fresh-quick:
+migrate-fresh:
 	- docker-compose exec app bash -c "php artisan migrate:fresh --seed"
-	- docker-compose exec app bash -c "php artisan passport:keys --force"
-	- docker-compose exec app bash -c "php artisan passport:client --personal --no-interaction"
 
 composer-update:
 	- docker-compose exec app bash -c "composer update"
 
-swagger-generate:
-	- docker-compose exec app bash -c "php artisan l5-swagger:generate"
+publish:
+	- docker-compose exec app bash -c 'php artisan vendor:publish --provider="EscolaSoft\LaravelH5p\LaravelH5pServiceProvider"'
 
-h5p-seed:
-	- docker-compose exec app bash -c "php artisan db:seed --class=H5PLibrarySeeder"
-	- docker-compose exec app bash -c "php artisan db:seed --class=H5PContentSeeder"
-	- docker-compose exec app bash -c "php artisan db:seed --class=HP5ContentCoursesSeeder"
+init: docker-up composer-update migrate-fresh
 
-migrate-fresh: migrate-fresh-quick h5p-seed
 
+## storage link
+## migrate
+## seed
+## publish php artisan vendor:publish --provider="EscolaSoft\LaravelH5p\LaravelH5pServiceProvider"

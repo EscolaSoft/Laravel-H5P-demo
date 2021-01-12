@@ -34,3 +34,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: database
+
+  phpmyadmin:
+    networks:
+      - l5
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    ports:
+      - "8079:80"
+    environment:
+      PMA_HOST: mysql

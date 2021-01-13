@@ -13,7 +13,7 @@ composer-update:
 publish:
 	- docker-compose exec app bash -c 'php artisan vendor:publish --provider="EscolaSoft\LaravelH5p\LaravelH5pServiceProvider"'
 
-init: docker-up composer-update migrate-fresh
+init: docker-up composer-update publish migrate-fresh
 
 
 ## storage link
